@@ -1,0 +1,9 @@
+services:
+  verify:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: objstore-verify:latest
+    container_name: objstore-verify
+    # 一次性服务：运行完整 pytest 套件后退出；--rm 保证不留容器。
+    command: ["python", "-m", "pytest", "-v"]
