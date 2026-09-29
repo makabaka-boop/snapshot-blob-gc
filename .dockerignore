@@ -1,0 +1,13 @@
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+.venv/
+venv/
+*.egg-info/
+.git/
+smoke_test.py
+repo-data/
+*.sqlite3
+*.sqlite3-wal
+*.sqlite3-shm

@@ -1,0 +1,28 @@
+# 本地对象仓库 —— Docker Compose
+#
+# 验收命令（按顺序执行）：
+#   docker compose config --quiet     # 校验 compose 文件
+#   docker compose build              # 构建镜像
+#   docker compose run --rm verify    # 一次性运行完整 pytest 验收套件
+#
+# verify 是“一次性测试服务”：运行结束即退出，--rm 自动清理容器。
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: local-object-repo:latest
+    # 库本身是被调用的组件；默认命令仅确认镜像可启动。
+    command: ["python", "-c", "import local_repo; print('local_object_repo ready')"]
+
+  verify:
+    image: local-object-repo:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ["python", "-m", "pytest", "-v"]
+    # 只读根文件系统 + 临时可写目录，确保测试不会意外依赖外部状态。
+    read_only: true
+    tmpfs:
+      - /tmp:size=64m
